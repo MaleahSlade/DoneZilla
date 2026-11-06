@@ -1,1 +1,1 @@
-DoneZilla is a Todo app built for the people who crush goals the way kaiju destroy cities. The app leverages React’s Context API to manage various aspects of the application’s state. This includes managing the list of todos, current visibility filters, and a simple theme.
+DoneZilla is a to-do app built for the people who crush goals the way kaiju destroy cities. The app leverages React’s Context API to manage various aspects of the application’s state. This includes managing the list of todos, current visibility filters, and a simple theme.
