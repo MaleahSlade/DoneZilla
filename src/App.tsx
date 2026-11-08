@@ -1,7 +1,9 @@
-import { useContext, useState } from 'react'
-import { ThemeContext, type Theme } from './context/themeContext'
+import { useContext } from 'react'
+import { ThemeContext } from './context/themeContext'
+import { TodoContext } from './context/todoContext'
 import TodoInput from './components/TodoInput'
 import TodoList from './components/TodoList'
+import FilterButtons from './components/FilterButtons'
 import './App.css'
 
 // Child component: reads the theme from context
@@ -52,41 +54,9 @@ function TODOHero({ todos_completed, total_todos }: TODOHeroProps) {
   )
 }
 
-interface Todo {
-  id: number
-  text: string
-  completed: boolean
-}
-
 function App() {
-  const [theme, setTheme] = useState<Theme>('🌚')
-  const [todos, setTodos] = useState<Todo[]>([])
-
-  function toggleTheme() {
-    setTheme(theme === '🌝' ? '🌚' : '🌝')
-  }
-
-  function addTodo(text: string) {
-    setTodos([...todos, { id: Date.now(), text, completed: false }])
-  }
-
-  function toggleTodo(id: number) {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    )
-  }
-
-  function deleteTodo(id: number) {
-    setTodos(todos.filter((todo) => todo.id !== id))
-  }
-
-  function editTodo(id: number, text: string) {
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
-    )
-  }
+  const { theme } = useContext(ThemeContext)
+  const { todos, clearCompleted } = useContext(TodoContext)
 
   const todosCompleted = todos.filter((todo) => todo.completed).length
 
@@ -94,7 +64,7 @@ function App() {
   const themeClass = theme === '🌚' ? '🌚' : '🌝'
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <>
       <nav className={`nav-${themeClass}`}>
         <ThemeToggle />
       </nav>
@@ -103,21 +73,26 @@ function App() {
         <h1>DoneZilla</h1>
         <h2> ⚡️ Obliterate Tasks Like a Kaiju ⚡️</h2>
 
-                <TODOHero
+        <TODOHero
           todos_completed={todosCompleted}
           total_todos={todos.length}
         />
 
-        <TodoInput onAddTodo={addTodo} />
+        <TodoInput />
 
-        <TodoList
-          todos={todos}
-          onToggle={toggleTodo}
-          onEdit={editTodo}
-          onDelete={deleteTodo}
-        />
+        <FilterButtons />
+
+        <TodoList />
+
+        <button
+          type="button"
+          onClick={clearCompleted}
+          disabled={todosCompleted === 0}
+        >
+          Clear completed
+        </button>
       </main>
-    </ThemeContext.Provider>
+    </>
   )
 }
 

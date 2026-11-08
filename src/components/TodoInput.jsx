@@ -1,11 +1,16 @@
-function TodoInput({ onAddTodo }) {
+import { useContext } from 'react';
+import { TodoContext } from '../context/todoContext';
+
+function TodoInput() {
+  const { addTodo } = useContext(TodoContext);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
     const text = new FormData(form).get('todo');
 
     if (text && text.trim()) {
-      onAddTodo(text.trim());
+      addTodo(text.trim());
     }
     form.reset();
   };

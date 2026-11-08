@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TodoContext } from '../context/todoContext';
 
-function TodoItem({ todo, onToggle, onEdit, onDelete }) {
+function TodoItem({ todo }) {
+  const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(todo.text);
 
   function save() {
     const text = draft.trim();
     if (text) {
-      onEdit(todo.id, text);
+      editTodo(todo.id, text);
     } else {
       setDraft(todo.text); // ignore an empty edit
     }
@@ -44,12 +46,12 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
         <input
           type="checkbox"
           checked={todo.completed}
-          onChange={() => onToggle(todo.id)}
+          onChange={() => toggleTodo(todo.id)}
         />
         {todo.text}
       </label>
       <button type="button" onClick={() => setIsEditing(true)}>Edit</button>
-      <button type="button" onClick={() => onDelete(todo.id)}>Delete</button>
+      <button type="button" onClick={() => deleteTodo(todo.id)}>Delete</button>
     </li>
   );
 }
