@@ -41,7 +41,7 @@ function App() {
   }
 
   // 🌚 = dark, 🌝 = light: turns the emoji into the class names your CSS uses
-  const themeClass = theme === '🌚' ? 'dark' : 'light'
+  const themeClass = theme === '🌚' ? '🌚' : '🌝'
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
