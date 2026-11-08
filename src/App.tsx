@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { ThemeContext, type Theme } from './context/themeContext'
 import TodoInput from './components/TodoInput'
+import TodoList from './components/TodoList'
 import './App.css'
 
 // Child component: reads the theme from context
@@ -31,7 +32,7 @@ function TODOHero({ todos_completed, total_todos }: TODOHeroProps) {
       }}
     >
       <div>
-        <p>Comnpleted Tasks</p>
+        <p>Completed Tasks</p>
       </div>
 
       <div
@@ -47,7 +48,6 @@ function TODOHero({ todos_completed, total_todos }: TODOHeroProps) {
       >
         {todos_completed}/{total_todos}
       </div>
-      
     </section>
   )
 }
@@ -78,9 +78,19 @@ function App() {
     )
   }
 
+  function deleteTodo(id: number) {
+    setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
+  function editTodo(id: number, text: string) {
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
+    )
+  }
+
   const todosCompleted = todos.filter((todo) => todo.completed).length
 
-  // 🌚 = dark, 🌝 = light: turns the emoji into the class names 
+  // 🌚 = dark, 🌝 = light: turns the emoji into the class names
   const themeClass = theme === '🌚' ? '🌚' : '🌝'
 
   return (
@@ -93,24 +103,19 @@ function App() {
         <h1>DoneZilla</h1>
         <h2> ⚡️ Obliterate Tasks Like a Kaiju ⚡️</h2>
 
-        <TODOHero todos_completed={todosCompleted} total_todos={todos.length} />
+                <TODOHero
+          todos_completed={todosCompleted}
+          total_todos={todos.length}
+        />
 
         <TodoInput onAddTodo={addTodo} />
 
-        <ul>
-          {todos.map((todo) => (
-            <li key={todo.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id)}
-                />
-                {todo.text}
-              </label>
-            </li>
-          ))}
-        </ul>
+        <TodoList
+          todos={todos}
+          onToggle={toggleTodo}
+          onEdit={editTodo}
+          onDelete={deleteTodo}
+        />
       </main>
     </ThemeContext.Provider>
   )
