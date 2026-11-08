@@ -1,10 +1,15 @@
-function TodoInput() {
-    
+function TodoInput({ onAddTodo }) {
   const handleSubmit = (event) => {
     event.preventDefault();
-    // reset the form
-    event.target.reset();
+    const form = event.target;
+    const text = new FormData(form).get('todo');
+
+    if (text && text.trim()) {
+      onAddTodo(text.trim());
+    }
+    form.reset();
   };
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       <label htmlFor="todo">
